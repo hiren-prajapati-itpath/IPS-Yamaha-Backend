@@ -8,7 +8,7 @@ const httpStatus = require('http-status');
  * Required Services & Helpers
  */
 const routes = require('./routes');
-const ApiError = require('./utilities/ApiError');
+const ApiError = require('./shared/utils/ApiError');
 
 /**
  * Bootstrap App

@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
-const { User } = require('../models');
-const ApiError = require('../utils/ApiError');
+const { User } = require('../../database/models/user.model');
+const ApiError = require('../../shared/utils/ApiError');
 
 /**
  * Create a user
