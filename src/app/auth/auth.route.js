@@ -1,21 +1,20 @@
 const express = require('express');
 const validate = require('../../middlewares/validate');
-//const appAuth = require("../auth/")
+
 const authAppController  = require('../auth/auth.controller');
 const authAppValidation  = require('../auth/auth.validation');
 const auth = require('../../middlewares/auth.middleware');
 
 const router = express.Router();
 
-//router.post('/register', validate(appAuth.authValidation.register), appAuth.authController.register);
 router.post('/register', validate(authAppValidation.register), authAppController.register);
-// router.post('/login', validate(authAppValidation.login), authAppController.login);
-// router.post('/logout', validate(authAppValidation.logout), authAppController.logout);
-// router.post('/refresh-tokens', validate(authAppValidation.refreshTokens), authAppController.refreshTokens);
-// router.post('/forgot-password', validate(authAppValidation.forgotPassword), authAppController.forgotPassword);
-// router.post('/reset-password', validate(authAppValidation.resetPassword), authAppController.resetPassword);
-// router.post('/send-verification-email', auth(), authAppController.sendVerificationEmail);
-// router.post('/verify-email', validate(authAppValidation.verifyEmail), authAppController.verifyEmail);
+router.post('/login', validate(authAppValidation.login), authAppController.login);
+router.post('/logout', validate(authAppValidation.logout), authAppController.logout);
+router.post('/refresh-tokens', validate(authAppValidation.refreshTokens), authAppController.refreshTokens);
+router.post('/forgot-password', validate(authAppValidation.forgotPassword), authAppController.forgotPassword);
+router.post('/reset-password', validate(authAppValidation.resetPassword), authAppController.resetPassword);
+router.post('/send-verification-email', auth(), authAppController.sendVerificationEmail);
+router.post('/verify-email', validate(authAppValidation.verifyEmail), authAppController.verifyEmail);
 
 module.exports = router;
 
