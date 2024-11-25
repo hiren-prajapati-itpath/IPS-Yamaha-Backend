@@ -21,6 +21,8 @@
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --check **/*.js",
     "prettier:fix": "prettier --write **/*.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "prepare": "husky install"
   },
   "keywords": [
@@ -90,5 +92,21 @@
     "nodemon": "^2.0.0",
     "prettier": "^2.0.5",
     "supertest": "^6.0.1"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "npm run lint:fix",
+      "npm run format"
+    ],
+    "*.js": [
+      "npm run lint:fix",
+      "npm run format"
+    ],
+    "*.json": [
+      "npm run format"
+    ],
+    "*.md": [
+      "npm run format"
+    ]
   }
 }
