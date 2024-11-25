@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 const secretKey = process.env.JWT_SECRET_KEY;
 
 const generateToken = (user) => {
@@ -12,7 +12,7 @@ const generateToken = (user) => {
 
 const generateVerificationToken = (user) => {
   try {
-    const token = jwt.sign(user, secretKey, { expiresIn: "24h" });
+    const token = jwt.sign(user, secretKey, { expiresIn: '24h' });
     return token;
   } catch (error) {
     return error;
@@ -21,7 +21,7 @@ const generateVerificationToken = (user) => {
 
 const generateResetPassToken = (email) => {
   try {
-    const token = jwt.sign({ email }, secretKey, { expiresIn: "15m" });
+    const token = jwt.sign({ email }, secretKey, { expiresIn: '15m' });
     return token;
   } catch (error) {
     return null;

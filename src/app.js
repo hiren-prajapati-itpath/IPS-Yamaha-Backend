@@ -15,7 +15,6 @@ const ApiError = require('./shared/utils/ApiError');
  */
 const app = express();
 
-
 // api routes
 app.use('/api', routes);
 

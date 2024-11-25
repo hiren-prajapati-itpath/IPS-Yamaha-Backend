@@ -4,11 +4,9 @@ const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 const config = require('./config/config');
 const morgan = require('./config/morgan');
-const { errorConverter, errorHandler } = require("./error.middleware")
-
+const { errorConverter, errorHandler } = require('./error.middleware');
 
 module.exports = function CommonMiddleware(app) {
-
   // parse json request body
   app.use(
     express.json({
@@ -58,5 +56,4 @@ module.exports = function CommonMiddleware(app) {
     app.use(morgan.successHandler);
     app.use(morgan.errorHandler);
   }
-
 };

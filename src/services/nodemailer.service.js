@@ -1,14 +1,14 @@
-const nodemailer = require("nodemailer");
+const nodemailer = require('nodemailer');
 
-const { generateVerificationToken } = require("./jwt.service");
+const { generateVerificationToken } = require('./jwt.service');
 
-const welcomeEmailTemplate = require("../templates/welcomeEmail.template");
-const resetPasswordEmailTemplate = require("../templates/resetPasswordEmail.template");
-const verificationEmailTemplate = require("../templates/verificationEmail.template");
-const verifiedUserEmailTemplate = require("../templates/verifiedUserEmail.template");
+const welcomeEmailTemplate = require('../templates/welcomeEmail.template');
+const resetPasswordEmailTemplate = require('../templates/resetPasswordEmail.template');
+const verificationEmailTemplate = require('../templates/verificationEmail.template');
+const verifiedUserEmailTemplate = require('../templates/verifiedUserEmail.template');
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  service: 'gmail',
   auth: {
     user: process.env.EMAIL,
     pass: process.env.PASS,
@@ -28,7 +28,7 @@ const sendWelcomeEmail = async (email, fullName) => {
   const mailOptions = {
     from: `Social Space <${process.env.EMAIL}>`,
     to: email,
-    subject: "Welcome to Social Space ! 🖐🏻",
+    subject: 'Welcome to Social Space ! 🖐🏻',
     html: welcomeEmailTemplate(fullName),
   };
 
@@ -39,7 +39,7 @@ const sendVerifiedUserEmail = async (email, fullName) => {
   const mailOptions = {
     from: `Social Space <${process.env.EMAIL}>`,
     to: email,
-    subject: "Congratulations! Your Social Space Account is Now Verified ✨",
+    subject: 'Congratulations! Your Social Space Account is Now Verified ✨',
     html: verifiedUserEmailTemplate(fullName),
   };
 
@@ -53,7 +53,7 @@ const sendVerificationEmail = async (user) => {
   const mailOptions = {
     from: `Social Space <${process.env.EMAIL}>`,
     to: user.email,
-    subject: "Verify Your Social Space Email ✉️",
+    subject: 'Verify Your Social Space Email ✉️',
     html: verificationEmailTemplate(user.fullName, url),
   };
 
@@ -66,13 +66,12 @@ const sendResetPasswordEmail = async (email, fullName, resetPassToken) => {
   const mailOptions = {
     from: `Social Space <${process.env.EMAIL}>`,
     to: email,
-    subject: "Reset Password 🛠️",
+    subject: 'Reset Password 🛠️',
     html: resetPasswordEmailTemplate(fullName, url),
   };
 
   await sendEmail(mailOptions);
 };
-
 
 module.exports = {
   sendWelcomeEmail,

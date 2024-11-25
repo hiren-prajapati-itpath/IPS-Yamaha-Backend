@@ -1,6 +1,5 @@
 # RESTful API Node Server Boilerplate
 
-
 A boilerplate/starter project for quickly building RESTful APIs using Node.js, Express, and Mongoose.
 
 ## Table of Contents
@@ -57,7 +56,7 @@ yarn start
 
 Testing:
 
-```bash
+````bash
 # run all tests
 yarn test
 
@@ -81,7 +80,7 @@ yarn prettier
 
 # fix prettier errors
 yarn prettier:fix
-```
+````
 
 ## Environment Variables
 
