@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const pick = require('../../shared/utils/pick');
 const ApiError = require('../../shared/utils/ApiError');
 const catchAsync = require('../../shared/utils/catchAsync');
-const userService = require('../users/users.service');
+const userService = require('./users.service');
 
 const createUser = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
