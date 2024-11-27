@@ -1,22 +1,38 @@
-const { RoleModule, Module } = require('../database/models');
+const httpStatus = require('http-status');
+const { Module, Role, RoleModule } = require('../database/models');
+const ApiError = require('../shared/utils/ApiError');
+const { routeToModuleMap } = require('../shared/constants/constant');
+const extractBaseRoute = require('../shared/utils/extractBaseRoute');
 
-const checkPermission = (permission) => async (req, res, next) => {
-  const userRoleId = req.user.role_id;
-  const moduleName = req.params.module;
-  try {
-    const roleModule = await RoleModule.findOne({
-      where: { role_id: userRoleId },
-      include: [{ model: Module, where: { name: moduleName } }],
-    });
+const checkPermission = (action) => {
+  return async (req, res, next) => {
+    const routePath = extractBaseRoute(req.originalUrl);
+    console.log('🚀 ~ return ~ routePath:', routePath);
 
-    if (roleModule && roleModule[permission]) {
-      return next();
+    const moduleName = routeToModuleMap[routePath];
+    if (!moduleName) {
+      return res.status(400).json({ message: 'Module not found for this route.' });
     }
 
-    res.status(403).json({ error: 'Permission denied' });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to validate permission' });
-  }
+    const userRole = req.user.role;
+
+    const role = await Role.findOne({ where: { role: userRole } });
+    const module = await Module.findOne({ where: { name: moduleName } });
+
+    if (!role || !module) {
+      return next(new ApiError(httpStatus.FORBIDDEN, `Access denied`));
+    }
+
+    const permissions = await RoleModule.findOne({
+      where: { role_id: role.id, module_id: module.id },
+    });
+
+    if (permissions && permissions[action]) {
+      next();
+    } else {
+      next(new ApiError(httpStatus.FORBIDDEN, `Access denied: No ${action} permission for this module.`));
+    }
+  };
 };
 
-module.exports = { checkPermission };
+module.exports = checkPermission;

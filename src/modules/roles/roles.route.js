@@ -13,4 +13,6 @@ router
   .patch(validate(Validation.updateRole), Controller.updateRole)
   .delete(validate(Validation.deleteRole), Controller.deleteRole);
 
+router.route('/assignPermissions', Controller.assignPermissions);
+
 module.exports = router;

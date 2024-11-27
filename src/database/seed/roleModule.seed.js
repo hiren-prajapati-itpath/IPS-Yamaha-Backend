@@ -1,72 +1,72 @@
 const Role = require('../models/role.model');
 const Module = require('../models/module.model');
 const RoleModule = require('../models/roleModule.model');
+const logger = require('../../config/logger');
 
 const permissions = [
   {
-    role: 'deskAdmin',
-    module: 'Dashboard',
+    role: 'admin',
+    module: 'dashboard',
     permissions: { read: true, write: true, update: true, delete: true },
   },
   {
-    role: 'Admin',
-    module: 'Settings',
+    role: 'admin',
+    module: 'settings',
     permissions: { read: true, write: true, update: true, delete: true },
   },
   {
-    role: 'Distributor',
-    module: 'DistributorManagement',
+    role: 'distributor',
+    module: 'distributorManagement',
     permissions: { read: true, write: false, update: false, delete: false },
   },
   {
-    role: 'Distributor',
-    module: 'Settings',
+    role: 'distributor',
+    module: 'settings',
     permissions: { read: true, write: false, update: false, delete: false },
   },
   {
     role: 'SuperAdmin',
-    module: 'Dashboard',
+    module: 'dashboard',
     permissions: { read: true, write: true, update: true, delete: true },
+  },
+  {
+    role: 'distributor',
+    module: 'reports',
+    permissions: { read: true, write: false, update: false, delete: false },
   },
 ];
 
 const seedRoleModules = async () => {
   try {
-    const existingRoles = await Role.findAll();
-    const existingModules = await Module.findAll();
+    const rolesMap = new Map((await Role.findAll()).map((role) => [role.role, role]));
+    const modulesMap = new Map((await Module.findAll()).map((module) => [module.name, module]));
 
-    // Map Permissions Dynamically
-    for (const permission of permissions) {
-      const role = existingRoles.find((r) => r.name === permission.role);
-      const module = existingModules.find((m) => m.name === permission.module);
+    await Promise.all(
+      permissions.map(async (permission) => {
+        const role = rolesMap.get(permission.role);
+        const module = modulesMap.get(permission.module);
 
-      if (role && module) {
-        const existingMapping = await RoleModule.findOne({
-          where: {
-            role_id: role.id,
-            module_id: module.id,
-          },
-        });
-
-        if (!existingMapping) {
-          // Create mapping if it does not exist
-          await RoleModule.create({
-            role_id: role.id,
-            module_id: module.id,
-            ...permission.permissions,
+        if (role && module) {
+          const [mapping, created] = await RoleModule.findOrCreate({
+            where: { role_id: role.id, module_id: module.id },
+            defaults: { ...permission.permissions },
           });
-        } else {
-          console.log(`Mapping for ${permission.role} and ${permission.module} already exists.`);
-        }
-      } else {
-        console.warn(`Skipping: Role "${permission.role}" or Module "${permission.module}" not found in the database.`);
-      }
-    }
 
-    console.log('Dynamic Role-Module mappings seeded successfully!');
+          if (created) {
+            logger.error(`Mapping for ${permission.role} and ${permission.module} created successfully.`);
+          } else {
+            logger.error(`Mapping for ${permission.role} and ${permission.module} already exists.`);
+          }
+        } else {
+          logger.warn(`Skipping: Role "${permission.role}" or Module "${permission.module}" not found.`);
+        }
+      })
+    );
+
+    logger.info('Dynamic Role-Module mappings seeded successfully!');
   } catch (err) {
-    console.error('Error seeding dynamic Role-Module mappings:', err.message);
+    logger.error('Error seeding dynamic Role-Module mappings:', err.message);
   }
 };
 
-seedRoleModules();
+module.exports = { seedRoleModules };

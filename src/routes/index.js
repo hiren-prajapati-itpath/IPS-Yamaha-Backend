@@ -3,6 +3,7 @@ const { authRoute } = require('../modules/auth');
 const { usersRoutes } = require('../modules/users');
 const { rolesRoutes } = require('../modules/roles');
 const { moduleRoutes } = require('../modules/module');
+const { dashboardRoutes } = require('../modules/dashboard');
 
 const docsRoute = require('./docs.route');
 const config = require('../config/config');
@@ -25,6 +26,10 @@ const defaultRoutes = [
   {
     path: '/modules',
     route: moduleRoutes,
+  },
+  {
+    path: '/dashboard',
+    route: dashboardRoutes,
   },
 ];
 

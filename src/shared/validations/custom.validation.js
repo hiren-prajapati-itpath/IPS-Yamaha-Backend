@@ -1,6 +1,7 @@
-const objectId = (value, helpers) => {
-  if (!value.match(/^[0-9a-fA-F]{24}$/)) {
-    return helpers.message('"{{#label}}" must be a valid mongo id');
+const validateUUID = (value, helpers) => {
+  const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+  if (!uuidRegex.test(value)) {
+    return helpers.message('{{#label}} must be a valid UUID');
   }
   return value;
 };
@@ -16,6 +17,6 @@ const password = (value, helpers) => {
 };
 
 module.exports = {
-  objectId,
+  validateUUID,
   password,
 };

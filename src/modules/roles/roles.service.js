@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Role } = require('../../database/models');
+const { Role, RoleModule, Module } = require('../../database/models');
 const ApiError = require('../../shared/utils/ApiError');
 
 const createRole = async (roleBody) => {
@@ -14,6 +14,24 @@ const getRoles = async () => {
 const getRoleById = async (id) => {
   const role = await Role.findByPk(id);
   return role;
+};
+
+const assignPermissions = async (roleBody) => {
+  const { roleName, moduleName, permissions } = roleBody;
+
+  const role = await Role.findOne({ where: { role: roleName } });
+  const module = await Module.findOne({ where: { name: moduleName } });
+
+  if (!role || !module) {
+    throw new Error('Role or Module not found');
+  }
+
+  const [mapping, created] = await RoleModule.findOrCreate({
+    where: { role_id: role.id, module_id: module.id },
+    defaults: { ...permissions },
+  });
+
+  return { created, mapping };
 };
 
 const updateRoleById = async (roleId, updateBody) => {
@@ -40,4 +58,5 @@ module.exports = {
   getRoleById,
   updateRoleById,
   deleteRoleById,
+  assignPermissions,
 };

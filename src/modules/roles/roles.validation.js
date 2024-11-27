@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { objectId } = require('../../shared/validations/custom.validation');
+const { validateUUID } = require('../../shared/validations/custom.validation');
 
 const createRole = {
   body: Joi.object().keys({
@@ -9,13 +9,13 @@ const createRole = {
 
 const getRole = {
   params: Joi.object().keys({
-    roleID: Joi.string().custom(objectId),
+    roleID: Joi.string().custom(validateUUID),
   }),
 };
 
 const updateRole = {
   params: Joi.object().keys({
-    roleId: Joi.required().custom(objectId),
+    roleId: Joi.required().custom(validateUUID),
   }),
   body: Joi.object()
     .keys({
@@ -26,7 +26,7 @@ const updateRole = {
 
 const deleteRole = {
   params: Joi.object().keys({
-    roleId: Joi.string().custom(objectId),
+    roleId: Joi.string().custom(validateUUID),
   }),
 };
 
