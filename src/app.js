@@ -9,11 +9,23 @@ const httpStatus = require('http-status');
  */
 const routes = require('./routes');
 const ApiError = require('./shared/utils/ApiError');
+const CommonMiddleware = require('./middlewares/initialize.middleware')
 
 /**
  * Bootstrap App
  */
 const app = express();
+
+/**
+ * Mount Middleware
+ */
+
+CommonMiddleware(app);
+
+// Basic route
+app.get('/api', (req, res) => {
+  return res.json('Thank you for visiting YAMAHA APP 👋🏻 !');
+});
 
 // api routes
 app.use('/api', routes);

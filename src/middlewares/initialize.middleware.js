@@ -2,9 +2,9 @@ const express = require('express');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
-const config = require('./config/config');
-const morgan = require('./config/morgan');
-const { errorConverter, errorHandler } = require('./error.middleware');
+const config = require('../config/config');
+const morgan = require('../config/morgan');
+const { errorHandler } = require('./error.middleware');
 
 module.exports = function CommonMiddleware(app) {
   // parse json request body
