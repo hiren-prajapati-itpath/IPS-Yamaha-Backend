@@ -21,6 +21,17 @@ const getRole = catchAsync(async (req, res) => {
   res.send(role);
 });
 
+const assignPermissions = catchAsync(async (req, res) => {
+  const roleBody = req.body;
+
+  const { created } = await roleService.assignPermissions(roleBody);
+  if (created) {
+    res.status(200).send('Permissions assigned successfully');
+  } else {
+    res.status(200).send('Permissions already exist');
+  }
+});
+
 const updateRole = catchAsync(async (req, res) => {
   const role = await roleService.updateRoleById(req.params.roleId, req.body);
   return res.send(role);
@@ -34,6 +45,7 @@ const deleteRole = catchAsync(async (req, res) => {
 module.exports = {
   createRole,
   getRoles,
+  assignPermissions,
   getRole,
   updateRole,
   deleteRole,

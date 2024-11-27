@@ -3,14 +3,9 @@ const config = require('./config/config');
 const logger = require('./config/logger');
 const sequelize = require('./database/config/connection-DB.config');
 require('dotenv').config();
+const { seedRoleModules } = require('./database/seed/roleModule.seed');
 
 let server;
-// mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
-//   logger.info('Connected to MongoDB');
-//   server = app.listen(config.port, () => {
-//     logger.info(`Listening to port ${config.port}`);
-//   });
-// });
 
 try {
   server = app.listen(config.port, async () => {
@@ -21,6 +16,8 @@ try {
       sequelize.sync({ alter: true, force: false }).then(() => {
         logger.info('🔁 Database Synchronized.');
       });
+
+      await seedRoleModules();
     } catch (error) {
       logger.error('Sequelize connection error:', error);
     }

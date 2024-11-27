@@ -1,10 +1,13 @@
 const express = require('express');
 const helmet = require('helmet');
+const httpStatus = require('http-status');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 const config = require('../config/config');
 const morgan = require('../config/morgan');
-const { errorHandler } = require('./error.middleware');
+const { errorConverter, errorHandler } = require('./error.middleware');
+const ApiError = require('../shared/utils/ApiError');
+const routes = require('../routes');
 
 module.exports = function CommonMiddleware(app) {
   // parse json request body
@@ -46,6 +49,17 @@ module.exports = function CommonMiddleware(app) {
   });
 
   app.use('api', rateLimiter);
+
+  // api routes
+  app.use('/api', routes);
+
+  // Send back a 404 error for any unknown api request
+  app.use((req, res, next) => {
+    next(new ApiError(httpStatus.NOT_FOUND, `The requested resource ${req.originalUrl} was not found `));
+  });
+
+  // convert error to ApiError, if needed
+  app.use(errorConverter);
 
   /**
    * Mount global error handler

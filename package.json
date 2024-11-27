@@ -1,5 +1,5 @@
 {
-  "name": "create-nodejs-express-app",
+  "name": "YAMAHA APP",
   "version": "1.7.0",
   "description": "Create a Node.js app for building production-ready RESTful APIs using Express, by running one command",
   "bin": "bin/createNodejsApp.js",
@@ -13,10 +13,6 @@
   "scripts": {
     "start": "pm2 start ecosystem.config.json --no-daemon",
     "dev": "cross-env NODE_ENV=development nodemon src/index.js",
-    "test": "jest -i --colors --verbose --detectOpenHandles",
-    "test:watch": "jest -i --watchAll",
-    "coverage": "jest -i --coverage",
-    "coverage:coveralls": "jest -i --coverage --coverageReporters=text-lcov | coveralls",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --check **/*.js",
