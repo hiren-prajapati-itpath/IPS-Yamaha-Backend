@@ -12,6 +12,11 @@
   },
   "scripts": {
     "start": "pm2 start ecosystem.config.json --no-daemon",
+    "pm2:start:development": "pm2 start ecosystem.config.json --env development --no-daemon",
+    "pm2:start:test": "pm2 start ecosystem.config.json --env test --no-daemon",
+    "pm2:stop": "pm2 stop all",
+    "pm2:delete": "pm2 delete all",
+    "pm2:logs": "pm2 logs",
     "dev": "cross-env NODE_ENV=development nodemon src/index.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

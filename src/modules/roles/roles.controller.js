@@ -9,6 +9,8 @@ const createRole = catchAsync(async (req, res) => {
 });
 
 const getRoles = catchAsync(async (req, res) => {
+  console.log('RESTEST ');
+
   const result = await roleService.getRoles();
   res.send(result);
 });
