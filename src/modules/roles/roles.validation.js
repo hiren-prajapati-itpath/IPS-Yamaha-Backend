@@ -3,7 +3,10 @@ const { validateUUID } = require('../../shared/validations/custom.validation');
 
 const createRole = {
   body: Joi.object().keys({
-    role: Joi.string().required(),
+    role: Joi.string().required().label('Role').messages({
+      'string.empty': '{#label} cannot be empty',
+      'any.required': '{#label} is a required field',
+    }),
   }),
 };
 

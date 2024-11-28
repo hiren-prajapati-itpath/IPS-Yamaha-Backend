@@ -16,12 +16,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendEmail = async (mailOptions) => {
-  try {
-    const info = await transporter.sendMail(mailOptions);
-    return info;
-  } catch (error) {
-    throw error;
-  }
+  return transporter.sendMail(mailOptions);
 };
 
 const sendWelcomeEmail = async (email, fullName) => {
