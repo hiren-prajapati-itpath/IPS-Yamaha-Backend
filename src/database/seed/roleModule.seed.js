@@ -45,18 +45,15 @@ const seedRoleModules = async () => {
       permissions.map(async (permission) => {
         const role = rolesMap.get(permission.role);
         const module = modulesMap.get(permission.module);
-
-        const existingMapping = await RoleModule.findOne({
-          where: { role_id: role.id, module_id: module.id },
-        });
-
-        if (existingMapping) {
-          existingMapping.permissions = permission.permissions;
-          await existingMapping.save();
-          console.log('Permissions updated successfully', existingMapping);
-        }
-
         if (role && module) {
+          const existingMapping = await RoleModule.findOne({
+            where: { role_id: role.id, module_id: module.id },
+          });
+
+          if (existingMapping) {
+            existingMapping.permissions = permission.permissions;
+            await existingMapping.save();
+          }
           const [mapping, created] = await RoleModule.findOrCreate({
             where: { role_id: role.id, module_id: module.id },
             defaults: { permissions: permission.permissions },
