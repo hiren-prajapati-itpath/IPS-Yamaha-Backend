@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
-const { usersService } = require('../users');
 const ApiError = require('../../shared/utils/ApiError');
+const { User, Role } = require('../../database/models');
 
 /**
  * Login with username and password
@@ -9,7 +9,8 @@ const ApiError = require('../../shared/utils/ApiError');
  * @returns {Promise<User>}
  */
 const loginUserWithEmailAndPassword = async (email, password) => {
-  const user = await usersService.getUserByEmail(email);
+  const user = await User.findOne({ where: { email }, include: [Role] });
+
   if (!user || !(await user.isPasswordMatch(password))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
   }

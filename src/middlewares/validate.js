@@ -12,7 +12,7 @@ const validate = (schema) => (req, res, next) => {
 
   if (error) {
     const errorMessage = error.details.map((details) => details.message.replace(/"/g, ''));
-    return next(new ApiError(httpStatus.BAD_REQUEST, errorMessage));
+    return next(new ApiError(httpStatus.BAD_REQUEST, errorMessage[0]));
   }
   Object.assign(req, value);
   return next();

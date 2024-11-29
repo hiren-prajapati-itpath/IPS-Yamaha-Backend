@@ -16,6 +16,11 @@ const getRoleById = async (id) => {
   return role;
 };
 
+const getRoleByName = async (roleName) => {
+  const role = await Role.findOne({ where: { role: roleName } });
+  return role;
+};
+
 const assignPermissions = async (roleBody) => {
   const { roleName, moduleName, permissions } = roleBody;
 
@@ -23,12 +28,37 @@ const assignPermissions = async (roleBody) => {
   const module = await Module.findOne({ where: { name: moduleName } });
 
   if (!role || !module) {
-    throw new Error('Role or Module not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Role or Module not found');
+  }
+
+  if (
+    typeof permissions !== 'object' ||
+    !Object.prototype.hasOwnProperty.call(permissions, 'read') ||
+    !Object.prototype.hasOwnProperty.call(permissions, 'write') ||
+    !Object.prototype.hasOwnProperty.call(permissions, 'update') ||
+    !Object.prototype.hasOwnProperty.call(permissions, 'delete')
+  ) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'Invalid permissions format. Expected permissions with read, write, update, delete keys.'
+    );
+  }
+
+  const existingMapping = await RoleModule.findOne({
+    where: { role_id: role.id, module_id: module.id },
+  });
+
+  if (existingMapping) {
+    existingMapping.permissions = permissions;
+    await existingMapping.save();
+    return { created: false, mapping: existingMapping };
   }
 
   const [mapping, created] = await RoleModule.findOrCreate({
     where: { role_id: role.id, module_id: module.id },
-    defaults: { ...permissions },
+    defaults: {
+      permissions,
+    },
   });
 
   return { created, mapping };
@@ -59,4 +89,5 @@ module.exports = {
   updateRoleById,
   deleteRoleById,
   assignPermissions,
+  getRoleByName,
 };
