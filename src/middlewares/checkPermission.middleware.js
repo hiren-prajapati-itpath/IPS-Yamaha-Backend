@@ -17,7 +17,6 @@ const checkPermission = (action) => {
 
     const role = await Role.findOne({ where: { role: userRole } });
     const module = await Module.findOne({ where: { name: moduleName } });
-
     if (!role || !module) {
       return next(new ApiError(httpStatus.FORBIDDEN, `Access denied`));
     }
@@ -25,6 +24,10 @@ const checkPermission = (action) => {
     const roleModule = await RoleModule.findOne({
       where: { role_id: role.id, module_id: module.id },
     });
+
+    if (!roleModule) {
+      return next(new ApiError(httpStatus.FORBIDDEN, `Access denied: No permissions assigned for this module.`));
+    }
     const { permissions } = roleModule.dataValues || roleModule;
 
     if (permissions && permissions[action]) {
