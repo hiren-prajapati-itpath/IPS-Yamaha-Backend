@@ -21,6 +21,11 @@ const permissions = [
   },
   {
     role: 'distributor',
+    module: 'dashboard',
+    permissions: { read: true, write: false, update: false, delete: false },
+  },
+  {
+    role: 'distributor',
     module: 'settings',
     permissions: { read: true, write: false, update: false, delete: false },
   },
@@ -43,29 +48,37 @@ const seedRoleModules = async () => {
 
     await Promise.all(
       permissions.map(async (permission) => {
-        const role = rolesMap.get(permission.role);
-        const module = modulesMap.get(permission.module);
-        if (role && module) {
-          const existingMapping = await RoleModule.findOne({
-            where: { role_id: role.id, module_id: module.id },
-          });
+        let role = rolesMap.get(permission.role);
+        if (!role) {
+          role = await Role.create({ role: permission.role });
+          rolesMap.set(permission.role, role);
+          logger.info(`Role "${permission.role}" created successfully.`);
+        }
 
-          if (existingMapping) {
-            existingMapping.permissions = permission.permissions;
-            await existingMapping.save();
-          }
+        let module = modulesMap.get(permission.module);
+        if (!module) {
+          module = await Module.create({ name: permission.module });
+          modulesMap.set(permission.module, module);
+          logger.info(`Module "${permission.module}" created successfully.`);
+        }
+
+        const existingMapping = await RoleModule.findOne({
+          where: { role_id: role.id, module_id: module.id },
+        });
+
+        if (existingMapping) {
+          existingMapping.permissions = permission.permissions;
+          await existingMapping.save();
+          logger.info(`Updated permissions for ${permission.role} on module ${permission.module}.`);
+        } else {
           const [mapping, created] = await RoleModule.findOrCreate({
             where: { role_id: role.id, module_id: module.id },
             defaults: { permissions: permission.permissions },
           });
 
           if (created) {
-            logger.error(`Mapping for ${permission.role} and ${permission.module} created successfully.`);
-          } else {
-            logger.error(`Mapping for ${permission.role} and ${permission.module} already exists.`);
+            logger.info(`Mapping for ${permission.role} and ${permission.module} created successfully.`);
           }
-        } else {
-          logger.warn(`Skipping: Role "${permission.role}" or Module "${permission.module}" not found.`);
         }
       })
     );

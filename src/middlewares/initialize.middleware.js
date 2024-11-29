@@ -54,7 +54,9 @@ module.exports = function CommonMiddleware(app) {
 
   app.use('api', rateLimiter);
 
-  // api routes
+  /**
+   * Register Routes
+   */
   app.use(
     '/api',
     (req, res, next) => {
