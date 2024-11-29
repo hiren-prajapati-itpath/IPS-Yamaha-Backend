@@ -5,14 +5,12 @@ const roleService = require('./roles.service');
 
 const createRole = catchAsync(async (req, res) => {
   const role = await roleService.createRole(req.body);
-  res.status(httpStatus.CREATED).send(role);
+  return res.successResponse(httpStatus.CREATED, { data: role });
 });
 
 const getRoles = catchAsync(async (req, res) => {
-  console.log('RESTEST ');
-
   const result = await roleService.getRoles();
-  res.send(result);
+  return res.successResponse(httpStatus.OK, { data: result });
 });
 
 const getRole = catchAsync(async (req, res) => {
@@ -20,28 +18,27 @@ const getRole = catchAsync(async (req, res) => {
   if (!role) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Role not found');
   }
-  res.send(role);
+  return res.successResponse(httpStatus.OK, { data: role });
 });
 
 const assignPermissions = catchAsync(async (req, res) => {
   const roleBody = req.body;
 
-  const { created } = await roleService.assignPermissions(roleBody);
+  const { created, mapping } = await roleService.assignPermissions(roleBody);
   if (created) {
-    res.status(200).send('Permissions assigned successfully');
-  } else {
-    res.status(200).send('Permissions already exist');
+    return res.successResponse(httpStatus.CREATED, { data: mapping, message: 'Permissions assigned successfully' });
   }
+  return res.successResponse(httpStatus.OK, { data: mapping, message: 'Permissions updated successfully' });
 });
 
 const updateRole = catchAsync(async (req, res) => {
   const role = await roleService.updateRoleById(req.params.roleId, req.body);
-  return res.send(role);
+  return res.successResponse(httpStatus.OK, { data: role });
 });
 
 const deleteRole = catchAsync(async (req, res) => {
   await roleService.deleteRoleById(req.params.roleId);
-  res.status(httpStatus.NO_CONTENT).send();
+  return res.successResponse(httpStatus.NO_CONTENT, {});
 });
 
 module.exports = {

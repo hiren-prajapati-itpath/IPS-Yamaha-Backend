@@ -8,6 +8,7 @@ const morgan = require('../config/morgan');
 const { errorConverter, errorHandler } = require('./error.middleware');
 const ApiError = require('../shared/utils/ApiError');
 const routes = require('../routes');
+const successResponseHelper = require('../shared/utils/successResponse');
 
 module.exports = function CommonMiddleware(app) {
   // parse json request body
@@ -51,7 +52,14 @@ module.exports = function CommonMiddleware(app) {
   app.use('api', rateLimiter);
 
   // api routes
-  app.use('/api', routes);
+  app.use(
+    '/api',
+    (req, res, next) => {
+      res.successResponse = successResponseHelper.successResponse;
+      next();
+    },
+    routes
+  );
 
   // Send back a 404 error for any unknown api request
   app.use((req, res, next) => {

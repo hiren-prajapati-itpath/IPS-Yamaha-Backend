@@ -23,10 +23,10 @@ const RoleModule = sequelize.define('RoleModule', {
       key: 'id',
     },
   },
-  read: { type: DataTypes.BOOLEAN, defaultValue: false },
-  write: { type: DataTypes.BOOLEAN, defaultValue: false },
-  update: { type: DataTypes.BOOLEAN, defaultValue: false },
-  delete: { type: DataTypes.BOOLEAN, defaultValue: false },
+  permissions: {
+    type: DataTypes.JSONB,
+    defaultValue: { read: false, write: false, update: false, delete: false },
+  },
 });
 
 Role.belongsToMany(Module, { through: RoleModule });

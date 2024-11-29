@@ -1,17 +1,19 @@
+const httpStatus = require('http-status');
+
 const dashboardController = {
   getDashboard: (req, res) => {
-    res.status(200).send('Dashboard data fetched successfully');
+    return res.successResponse(httpStatus.OK, { message: 'Dashboard data fetched successfully' });
   },
   createDashboardEntry: (req, res) => {
-    res.status(201).send('Dashboard entry created successfully');
+    return res.successResponse(httpStatus.OK, { message: 'Dashboard entry created successfully' });
   },
   updateDashboardEntry: (req, res) => {
     const { id } = req.params;
-    res.status(200).send(`Dashboard entry with ID ${id} updated successfully`);
+    return res.successResponse(httpStatus.OK, { message: `Dashboard entry with ID ${id} updated successfully` });
   },
   deleteDashboardEntry: (req, res) => {
     const { id } = req.params;
-    res.status(200).send(`Dashboard entry with ID ${id} deleted successfully`);
+    return res.successResponse(httpStatus.OK, { message: `Dashboard entry with ID ${id} deleted successfully` });
   },
 };
 
