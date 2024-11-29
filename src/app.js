@@ -4,7 +4,7 @@
 const express = require('express');
 
 /**
- * Required Services & Helpers
+ * Required Middleware
  */
 const CommonMiddleware = require('./middlewares/initialize.middleware');
 

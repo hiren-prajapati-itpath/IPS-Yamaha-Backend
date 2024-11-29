@@ -8,9 +8,6 @@ const { seedRoleModules } = require('./database/seed/roleModule.seed');
 let server;
 
 try {
-  console.log('ENVIROTNMETN : ', process.env.ROOT_PATH);
-  console.log('DATABSE NAME : ', process.env.DB_NAME);
-
   server = app.listen(config.port, async () => {
     logger.info(`🚀 Server running on http://localhost:${config.port}`);
     try {
