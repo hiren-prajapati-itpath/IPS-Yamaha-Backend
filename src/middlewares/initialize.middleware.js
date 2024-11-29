@@ -27,6 +27,9 @@ module.exports = function CommonMiddleware(app) {
     })
   );
 
+  app.use(morgan.successHandler);
+  app.use(morgan.errorHandler);
+
   // set security HTTP headers
   app.use(helmet());
 
@@ -73,9 +76,4 @@ module.exports = function CommonMiddleware(app) {
    * Mount global error handler
    */
   app.use(errorHandler);
-
-  if (config.env !== 'test') {
-    app.use(morgan.successHandler);
-    app.use(morgan.errorHandler);
-  }
 };
