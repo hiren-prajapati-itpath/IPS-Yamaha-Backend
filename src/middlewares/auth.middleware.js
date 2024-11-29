@@ -1,33 +1,30 @@
-const passport = require('passport');
+const jwt = require('jsonwebtoken');
 const httpStatus = require('http-status');
 const ApiError = require('../shared/utils/ApiError');
-const { roleRights } = require('../config/roles');
+const config = require('../config/config');
+const { verifyToken } = require('../services/jwt.service');
+const { User } = require('../database/models');
 
-const verifyCallback = (req, resolve, reject, requiredRights) => async (err, user, info) => {
-  if (err || info || !user) {
-    return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate'));
-  }
-  req.user = user;
+const secretKey = config.jwt.secret;
 
-  if (requiredRights.length) {
-    const userRights = roleRights.get(user.role);
-    const hasRequiredRights = requiredRights.every((requiredRight) => userRights.includes(requiredRight));
-    if (!hasRequiredRights && req.params.userId !== user.id) {
-      return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
+const authMiddleware = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization.split(' ')[1];
+    if (!token) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Authentication token is missing');
     }
-  }
 
-  resolve();
+    const decoded = verifyToken(token, secretKey);
+    const user = await User.findOne({ where: { id: decoded.userId } });
+    if (!user) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid authentication token');
+    }
+
+    req.user = decoded;
+    next();
+  } catch (error) {
+    next(error);
+  }
 };
 
-const auth =
-  (...requiredRights) =>
-  async (req, res, next) => {
-    return new Promise((resolve, reject) => {
-      passport.authenticate('jwt', { session: false }, verifyCallback(req, resolve, reject, requiredRights))(req, res, next);
-    })
-      .then(() => next())
-      .catch((err) => next(err));
-  };
-
-module.exports = auth;
+module.exports = authMiddleware;
