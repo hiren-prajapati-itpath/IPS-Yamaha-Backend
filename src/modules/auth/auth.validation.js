@@ -3,7 +3,7 @@ const { password } = require('../../shared/validations/custom.validation');
 
 const register = {
   body: Joi.object().keys({
-    username: Joi.string().required(),
+    username: Joi.string().optional(),
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
     role: Joi.string().required(),
@@ -17,7 +17,20 @@ const login = {
   }),
 };
 
+const headerSchema = {
+  headers: Joi.object({
+    authorization: Joi.string()
+      .required()
+      .pattern(/^Bearer\s/)
+      .messages({
+        'string.empty': 'Authorization header is required!',
+        'string.pattern.base': "Authorization header must start with 'Bearer '",
+      }),
+  }).unknown(),
+};
+
 module.exports = {
   register,
   login,
+  headerSchema,
 };
