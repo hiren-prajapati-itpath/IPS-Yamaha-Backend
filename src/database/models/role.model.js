@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/connection-DB.config');
+const { Paginate } = require('./plugins');
 
 const Role = sequelize.define('Role', {
   id: {
@@ -13,5 +14,8 @@ const Role = sequelize.define('Role', {
     unique: true,
   },
 });
+
+// Apply the paginate plugin
+Paginate(Role);
 
 module.exports = Role;

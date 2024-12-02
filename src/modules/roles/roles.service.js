@@ -6,9 +6,8 @@ const createRole = async (roleBody) => {
   return Role.create(roleBody);
 };
 
-const getRoles = async () => {
-  const roles = await Role.findAll();
-  return roles;
+const getRoles = async (filter = {}, options = {}) => {
+  return Role.paginate(filter, options);
 };
 
 const getRoleById = async (id) => {

@@ -9,7 +9,13 @@ const createRole = catchAsync(async (req, res) => {
 });
 
 const getRoles = catchAsync(async (req, res) => {
-  const result = await roleService.getRoles();
+  const filter = {}; // Add filters if needed
+  const options = {
+    page: 1,
+    limit: 5,
+    sortBy: 'role:asc',
+  };
+  const result = await roleService.getRoles(filter, options);
   return res.successResponse(httpStatus.OK, { data: result });
 });
 
