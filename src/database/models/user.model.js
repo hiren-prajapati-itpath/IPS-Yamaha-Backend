@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/connection-DB.config');
 const Role = require('./role.model');
 const { hashPassword, comparePassword } = require('../../services/bcrypt.service');
-const { Paginate } = require('./plugins');
+const { Paginate, transformToPlain } = require('./plugins');
 
 const User = sequelize.define('User', {
   id: {
@@ -45,5 +45,10 @@ User.prototype.isPasswordMatch = async function (password) {
 
 // Apply the paginate plugin
 Paginate(User);
+
+// Apply transformation after a find operation
+User.afterFind((result) => {
+  return transformToPlain(result);
+});
 
 module.exports = User;

@@ -1,2 +1,2 @@
-module.exports.toJSON = require('./toJSON.plugin');
+module.exports.transformToPlain = require('./transformToPlain ');
 module.exports.Paginate = require('./paginate.plugin');
