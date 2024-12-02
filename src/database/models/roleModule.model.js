@@ -9,27 +9,20 @@ const RoleModule = sequelize.define('RoleModule', {
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
-  role_id: {
-    type: DataTypes.UUID,
-    references: {
-      model: Role,
-      key: 'id',
-    },
-  },
-  module_id: {
-    type: DataTypes.UUID,
-    references: {
-      model: Module,
-      key: 'id',
-    },
-  },
   permissions: {
     type: DataTypes.JSONB,
     defaultValue: { read: false, write: false, update: false, delete: false },
   },
 });
 
-Role.belongsToMany(Module, { through: RoleModule });
-Module.belongsToMany(Role, { through: RoleModule });
+Role.belongsToMany(Module, {
+  through: RoleModule,
+  foreignKey: 'role_id',
+});
+
+Module.belongsToMany(Role, {
+  through: RoleModule,
+  foreignKey: 'module_id',
+});
 
 module.exports = RoleModule;

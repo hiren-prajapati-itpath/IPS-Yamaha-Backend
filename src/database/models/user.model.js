@@ -23,13 +23,6 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  role_id: {
-    type: DataTypes.UUID,
-    references: {
-      model: Role,
-      key: 'id',
-    },
-  },
   status: {
     type: DataTypes.STRING,
     defaultValue: 'active',
