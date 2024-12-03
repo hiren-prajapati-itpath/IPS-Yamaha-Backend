@@ -24,13 +24,15 @@ fs.readdirSync(__dirname)
     return file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js';
   })
   .forEach((file) => {
-    const model = path.join(__dirname, file)(sequelize, Sequelize.DataTypes);
+    /* eslint-disable-next-line import/no-dynamic-require, global-require */
+    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
 
     // Add a centralized afterFind hook for transforming results
     model.addHook('afterFind', (result) => {
       if (result) {
         return transformToPlain(result);
       }
+      return result;
     });
 
     db[model.name] = model;
