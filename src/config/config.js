@@ -14,6 +14,13 @@ const envVarsSchema = Joi.object()
     SMTP_USERNAME: Joi.string().description('username for email server'),
     SMTP_PASSWORD: Joi.string().description('password for email server'),
     EMAIL_FROM: Joi.string().description('the from field in the emails sent by the app'),
+
+    // Database credentials
+    DB_HOST: Joi.string().required().description('Database host'),
+    DB_USER: Joi.string().required().description('Database username'),
+    DB_PASSWORD: Joi.string().required().description('Database password'),
+    DB_NAME: Joi.string().required().description('database name'),
+    DB_PORT: Joi.number().default(5432).description('Database port'),
   })
   .unknown();
 
@@ -28,10 +35,6 @@ module.exports = {
   port: envVars.PORT,
   jwt: {
     secret: envVars.JWT_SECRET,
-    accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
-    refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
-    resetPasswordExpirationMinutes: envVars.JWT_RESET_PASSWORD_EXPIRATION_MINUTES,
-    verifyEmailExpirationMinutes: envVars.JWT_VERIFY_EMAIL_EXPIRATION_MINUTES,
   },
   email: {
     smtp: {
@@ -43,5 +46,12 @@ module.exports = {
       },
     },
     from: envVars.EMAIL_FROM,
+  },
+  db: {
+    host: envVars.DB_HOST,
+    user: envVars.DB_USER,
+    password: envVars.DB_PASSWORD,
+    database: envVars.DB_NAME,
+    port: envVars.DB_PORT,
   },
 };

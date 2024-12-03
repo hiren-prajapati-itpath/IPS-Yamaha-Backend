@@ -28,7 +28,7 @@ const checkPermission = (action) => {
     if (!roleModule) {
       return next(new ApiError(httpStatus.FORBIDDEN, `Access denied: No permissions assigned for this module.`));
     }
-    const { permissions } = roleModule.dataValues || roleModule;
+    const { permissions } = roleModule;
 
     if (permissions && permissions[action]) {
       return next();

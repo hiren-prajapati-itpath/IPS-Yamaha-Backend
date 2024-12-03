@@ -12,7 +12,7 @@ const createRole = {
 
 const getRole = {
   params: Joi.object().keys({
-    roleID: Joi.string().custom(validateUUID),
+    roleId: Joi.string().custom(validateUUID),
   }),
 };
 

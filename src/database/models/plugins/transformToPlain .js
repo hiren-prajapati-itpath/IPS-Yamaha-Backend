@@ -1,5 +1,5 @@
 // function to transform Sequelize instances into plain JavaScript objects
-const transformAfterFind = (result) => {
+const transformToPlain = (result) => {
   if (Array.isArray(result)) {
     return result.map((item) => item.toJSON());
   }
@@ -9,4 +9,4 @@ const transformAfterFind = (result) => {
   return result;
 };
 
-module.exports = transformAfterFind;
+module.exports = transformToPlain;

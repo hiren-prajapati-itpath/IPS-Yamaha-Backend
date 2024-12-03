@@ -4,7 +4,6 @@ const pick = require('../shared/utils/pick');
 const ApiError = require('../shared/utils/ApiError');
 
 const validate = (schema) => (req, res, next) => {
-  console.log('Headers:', req.headers);
   const validSchema = pick(schema, ['params', 'query', 'body', 'headers']);
   const object = pick(req, Object.keys(validSchema));
   const { value, error } = Joi.compile(validSchema)
@@ -12,13 +11,8 @@ const validate = (schema) => (req, res, next) => {
     .validate(object);
 
   if (error) {
-    const errorMessage = error.details.reduce((acc, details) => {
-      const field = details.path[details.path.length - 1];
-      acc[field] = details.message.replace(/"/g, '');
-      return acc;
-    }, {});
-
-    return next(new ApiError(httpStatus.BAD_REQUEST, errorMessage));
+    const errorMessage = error.details.map((details) => details.message.replace(/"/g, ''));
+    return next(new ApiError(httpStatus.BAD_REQUEST, errorMessage[0]));
   }
 
   Object.assign(req, value);

@@ -1,6 +1,4 @@
-const Role = require('../models/role.model');
-const Module = require('../models/module.model');
-const RoleModule = require('../models/roleModule.model');
+const { Role, Module, RoleModule } = require('../models');
 const logger = require('../../config/logger');
 
 const permissions = [
@@ -85,6 +83,7 @@ const seedRoleModules = async () => {
 
     logger.info('Dynamic Role-Module mappings seeded successfully!');
   } catch (err) {
+    console.log('🚀 ~ seedRoleModules ~ err:', err);
     logger.error('Error seeding dynamic Role-Module mappings:', err.message);
   }
 };

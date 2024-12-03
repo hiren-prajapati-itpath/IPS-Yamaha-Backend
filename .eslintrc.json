@@ -15,7 +15,8 @@
     "consistent-return": "off",
     "jest/expect-expect": "off",
     "security/detect-object-injection": "off",
-    //"endOfLine": "auto"
+    "endOfLine": 0,
+    "import/no-commonjs": "off",
     "no-unused-vars": "off"
   }
 }
