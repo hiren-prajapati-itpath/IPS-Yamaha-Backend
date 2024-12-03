@@ -19,7 +19,7 @@ A boilerplate/starter project for quickly building RESTful APIs using Node.js, E
 
 ## Features
 
-- **NoSQL database**: [Postgres](https://www.mongodb.com) object data modeling using [sequelize](https://sequelize.org/)
+- **SQL database**: [Postgres](https://www.mongodb.com) object data modeling using [sequelize](https://sequelize.org/)
 - **Authentication and authorization**: using [JWT]
 - **Validation**: request data validation using [Joi](https://github.com/hapijs/joi)
 - **Logging**: using [winston](https://github.com/winstonjs/winston) and [morgan](https://github.com/expressjs/morgan)
@@ -127,7 +127,7 @@ src\
 
 ## API Documentation
 
-To view the list of available APIs and their specifications, run the server and go to `http://localhost:3000/v1/docs` in your browser. This documentation page is automatically generated using the [swagger](https://swagger.io/) definitions written as comments in the route files.
+To view the list of available APIs and their specifications, run the server and go to `http://localhost:3000/api/docs` in your browser. This documentation page is automatically generated using the [swagger](https://swagger.io/) definitions written as comments in the route files.
 
 ## Error Handling
 
@@ -176,10 +176,7 @@ The app also contains 2 custom Sequelize plugins that you can attach to any sequ
 
 ### toJSON
 
-The toJSON plugin applies the following changes in the toJSON transform call:
-
-- removes \_\_v, createdAt, updatedAt, and any schema path that has private: true
-- replaces \_id with id
+the transformToPlain function to automatically transform Sequelize instances into plain JavaScript objects.
 
 ### paginate
 
